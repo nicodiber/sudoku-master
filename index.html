@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Master Web - UAI</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <div id="login-screen" class="screen active">
+        <div class="card">
+            <h1>Sudoku Master</h1>
+            <p>Ingresa tu nombre de jugador para comenzar</p>
+            <input type="text" id="login-name" placeholder="Nombre (Mínimo 3 caracteres alfanuméricos)" autocomplete="off">
+            <button id="btn-login" disabled>Continuar</button>
+        </div>
+    </div>
+
+    <div id="main-menu-screen" class="screen hidden">
+        <div class="card">
+            <h2 id="menu-greeting">Bienvenido, Jugador</h2>
+            <div class="menu-buttons">
+                <div class="difficulty-section">
+                    <h3>Jugar</h3>
+                    <button id="btn-play-easy">Fácil</button>
+                    <button id="btn-play-medium">Medio</button>
+                    <button id="btn-play-hard">Difícil</button>
+                </div>
+                <button id="btn-rules">Reglas del Juego</button>
+                <button id="btn-ranking">Historial de Ranking</button>
+                <button id="btn-contact">Contacto</button>
+                <button id="btn-edit-name" class="secondary-btn">Editar Nombre</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-screen" class="screen hidden">
+        <div class="game-container">
+            <div class="top-panel">
+                <div class="left-controls">
+                    <button id="btn-abandon">Abandonar</button>
+                    <button id="btn-pause">Pausar</button>
+                </div>
+                <div class="center-metrics">
+                    <div class="metric"><span id="game-player-name"></span> (<span id="game-difficulty-label"></span>)</div>
+                    <div class="metric">Tiempo: <span id="timer-display">00:00</span></div>
+                    <div class="metric">Puntos: <span id="score-display">0</span></div>
+                    <div class="metric lives-container" id="lives-display"></div>
+                </div>
+                <div class="right-controls">
+                    <button id="btn-restart">Reiniciar</button>
+                </div>
+            </div>
+
+            <div id="board-overlay" class="hidden">
+                <h2 id="overlay-text">Partida Pausada</h2>
+            </div>
+            <div id="sudoku-board"></div>
+
+            <div id="keyboard-panel">
+                <button class="key-num" data-num="1">1</button>
+                <button class="key-num" data-num="2">2</button>
+                <button class="key-num" data-num="3">3</button>
+                <button class="key-num" data-num="4">4</button>
+                <button class="key-num" data-num="5">5</button>
+                <button class="key-num" data-num="6">6</button>
+                <button class="key-num" data-num="7">7</button>
+                <button class="key-num" data-num="8">8</button>
+                <button class="key-num" data-num="9">9</button>
+                <button id="key-eraser">Goma</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-overlay" class="hidden">
+        <div id="modal-rules" class="modal-content hidden">
+            <h3>Reglas del Juego</h3>
+            <p>Completa la grilla de 9x9 para que cada fila, columna y bloque de 3x3 contenga los números del 1 al 9 sin repetirse.</p>
+            <p><strong>Penalizaciones:</strong> Cada error resta 1 vida y suma +300 puntos. (Menor puntaje es mejor).</p>
+            <button class="btn-close-modal">Cerrar</button>
+        </div>
+
+        <div id="modal-ranking" class="modal-content hidden">
+            <h3>Ranking Histórico</h3>
+            <div id="ranking-list"></div>
+            <button class="btn-close-modal">Cerrar</button>
+        </div>
+
+        <div id="modal-contact" class="modal-content hidden">
+            <h3>Contacto</h3>
+            <input type="text" id="contact-name" placeholder="Nombre alfanumérico">
+            <input type="email" id="contact-email" placeholder="Correo electrónico válido">
+            <textarea id="contact-message" placeholder="Mensaje (mínimo 6 caracteres)"></textarea>
+            <button id="btn-send-contact" disabled>Enviar via Mailto</button>
+            <button class="btn-close-modal secondary-btn">Cancelar</button>
+        </div>
+
+        <div id="modal-restart-confirm" class="modal-content hidden">
+            <h3>¿Reiniciar tablero?</h3>
+            <p>Se borrarán tus jugadas pero conservarás el tiempo, penalizaciones y vidas actuales.</p>
+            <button id="btn-confirm-restart">Sí, reiniciar tablero</button>
+            <button id="btn-cancel-restart" class="secondary-btn">Cancelar</button>
+        </div>
+
+        <div id="modal-pause" class="modal-content hidden">
+            <h3>Juego Pausado</h3>
+            <button id="btn-resume-game">Reanudar</button>
+            <button id="btn-abandon-paused" class="secondary-btn">Abandonar Partida</button>
+        </div>
+
+        <div id="modal-game-over" class="modal-content hidden">
+            <h3>¡Game Over!</h3>
+            <p>Te has quedado sin vidas.</p>
+            <button id="btn-game-over-close">Volver al Menú</button>
+        </div>
+
+        <div id="modal-victory" class="modal-content hidden">
+            <h3>¡Victoria!</h3>
+            <p>Puntos finales: <span id="victory-score"></span></p>
+            <button id="btn-victory-close">Continuar</button>
+        </div>
+    </div>
+
+    <script src="js/state.js"></script>
+    <script src="js/generator.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
