@@ -1,24 +1,60 @@
 "use strict";
 
+// Inicializa matriz de notas vacía
+function createEmptyNotes() {
+    var notes = [];
+    for (var r = 0; r < 9; r++) {
+        var row = [];
+        for (var c = 0; c < 9; c++) { row.push([]); }
+        notes.push(row);
+    }
+    return notes;
+}
+
+// Guarda estado para función Deshacer
+function saveStateToHistory() {
+    gameState.history.push({
+        userMatrix: deepCopyMatrix(gameData.userMatrix),
+        notesMatrix: deepCopyNotes(gameData.notesMatrix),
+        lives: gameState.lives,
+        score: gameState.score
+    });
+}
+
+function undoLastAction() {
+    if (gameState.history.length === 0 || gameState.isPaused) return;
+    var lastState = gameState.history.pop();
+    gameData.userMatrix = lastState.userMatrix;
+    gameData.notesMatrix = lastState.notesMatrix;
+    gameState.lives = lastState.lives;
+    gameState.score = lastState.score;
+    
+    updateDashboard();
+    renderBoard();
+}
+
 function initGame(difficulty) {
     gameState.difficulty = difficulty;
     gameState.timeElapsed = 0;
     gameState.lives = 5;
     gameState.selectedCell = null;
     gameState.isPaused = false;
+    gameState.isNotesMode = false;
+    gameState.history = [];
+    document.getElementById('btn-notes').classList.remove('active');
     
     var clues = 0;
     document.body.className = ''; 
     if (difficulty === 'Fácil') {
-        clues = getRandomInt(32, 36);
+        clues = getRandomInt(45, 50);
         gameState.baseScore = 2000;
         document.body.classList.add('theme-easy');
     } else if (difficulty === 'Medio') {
-        clues = getRandomInt(28, 31);
+        clues = getRandomInt(36, 44);
         gameState.baseScore = 1000;
         document.body.classList.add('theme-medium');
     } else {
-        clues = getRandomInt(22, 27);
+        clues = getRandomInt(28, 35);
         gameState.baseScore = 0;
         document.body.classList.add('theme-hard');
     }
@@ -28,6 +64,7 @@ function initGame(difficulty) {
     gameData.solutionMatrix = shuffleSudokuMatrix();
     gameData.maskedMatrix = maskMatrix(gameData.solutionMatrix, clues);
     gameData.userMatrix = deepCopyMatrix(gameData.maskedMatrix);
+    gameData.notesMatrix = createEmptyNotes();
 
     updateDashboard();
     renderBoard();
@@ -54,6 +91,10 @@ function stopTimer() {
 function renderBoard() {
     var boardContainer = document.getElementById('sudoku-board');
     boardContainer.innerHTML = '';
+    
+    // Distribución Numpad para las notas
+    var notesLayoutMap = [7, 8, 9, 4, 5, 6, 1, 2, 3]; 
+
     for (var r = 0; r < 9; r++) {
         for (var c = 0; c < 9; c++) {
             var cell = document.createElement('div');
@@ -72,6 +113,31 @@ function renderBoard() {
                 if (val !== gameData.solutionMatrix[r][c]) {
                     cell.classList.add('error');
                 }
+            } else {
+
+                var notes = gameData.notesMatrix[r][c];
+                if (notes.length > 0) {
+                    var notesContainer = document.createElement('div');
+                    notesContainer.className = 'notes-container';
+                    
+                    for (var i = 0; i < 9; i++) {
+                        var noteDiv = document.createElement('div');
+                        noteDiv.className = 'note-cell';
+                        var mappedNum = notesLayoutMap[i];
+                        if (notes.indexOf(mappedNum) !== -1) {
+                            noteDiv.innerText = mappedNum;
+                        }
+                        notesContainer.appendChild(noteDiv);
+                    }
+                    cell.appendChild(notesContainer);
+                }
+            }
+            
+            if (gameState.selectedCell && 
+                parseInt(gameState.selectedCell.getAttribute('data-row')) === r && 
+                parseInt(gameState.selectedCell.getAttribute('data-col')) === c) {
+                cell.classList.add('selected');
+                gameState.selectedCell = cell; 
             }
             
             cell.addEventListener('click', onCellClick);
@@ -82,7 +148,7 @@ function renderBoard() {
 
 function onCellClick(e) {
     if (gameState.isPaused) return;
-    var target = e.target;
+    var target = e.currentTarget;
     if (target.classList.contains('clue')) return;
     
     var cells = document.querySelectorAll('.sudoku-cell');
@@ -94,6 +160,28 @@ function onCellClick(e) {
     gameState.selectedCell = target;
 }
 
+// Limpia las notas relacionadas cuando se coloca un número final
+function clearAdjacentNotes(row, col, num) {
+    var r, c;
+    // Fila y Columna
+    for (var i = 0; i < 9; i++) {
+        var idxCol = gameData.notesMatrix[row][i].indexOf(num);
+        if (idxCol !== -1) gameData.notesMatrix[row][i].splice(idxCol, 1);
+        
+        var idxRow = gameData.notesMatrix[i][col].indexOf(num);
+        if (idxRow !== -1) gameData.notesMatrix[i][col].splice(idxRow, 1);
+    }
+    // Bloque 3x3
+    var startR = Math.floor(row / 3) * 3;
+    var startC = Math.floor(col / 3) * 3;
+    for (r = startR; r < startR + 3; r++) {
+        for (c = startC; c < startC + 3; c++) {
+            var idxBlock = gameData.notesMatrix[r][c].indexOf(num);
+            if (idxBlock !== -1) gameData.notesMatrix[r][c].splice(idxBlock, 1);
+        }
+    }
+}
+
 function processNumberInput(num) {
     if (!gameState.selectedCell || gameState.isPaused) return;
     
@@ -101,21 +189,34 @@ function processNumberInput(num) {
     var c = parseInt(gameState.selectedCell.getAttribute('data-col'), 10);
     var correctNum = gameData.solutionMatrix[r][c];
 
-    gameData.userMatrix[r][c] = num;
-    gameState.selectedCell.innerText = num;
+    saveStateToHistory(); // Guardar estado para Deshacer
 
-    if (num !== correctNum) {
-        gameState.selectedCell.classList.add('error');
-        gameState.lives--;
-        gameState.score += 300;
-        updateDashboard();
-        
-        if (gameState.lives <= 0) {
-            handleGameOver();
+    if (gameState.isNotesMode) {
+        // Lógica de Lápiz
+        if (gameData.userMatrix[r][c] === 0) { // Sólo si no hay número fijo
+            var noteIndex = gameData.notesMatrix[r][c].indexOf(num);
+            if (noteIndex === -1) {
+                gameData.notesMatrix[r][c].push(num); // Agregar nota
+            } else {
+                gameData.notesMatrix[r][c].splice(noteIndex, 1); // Quitar nota
+            }
+            renderBoard();
         }
     } else {
-        gameState.selectedCell.classList.remove('error');
-        checkVictory();
+        // Lógica Normal
+        gameData.userMatrix[r][c] = num;
+        
+        if (num !== correctNum) {
+            gameState.lives--;
+            gameState.score += 300;
+            if (gameState.lives <= 0) { handleGameOver(); }
+        } else {
+            // El número es correcto: Limpiar las notas cruzadas en otras celdas
+            clearAdjacentNotes(r, c, num);
+            checkVictory();
+        }
+        updateDashboard();
+        renderBoard();
     }
 }
 

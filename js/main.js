@@ -69,13 +69,29 @@ for (var k = 0; k < keyNums.length; k++) {
     });
 }
 
+// Botones Nota y Goma
+document.getElementById('btn-notes').addEventListener('click', function(e) {
+    gameState.isNotesMode = !gameState.isNotesMode;
+    if (gameState.isNotesMode) {
+        e.target.classList.add('active');
+    } else {
+        e.target.classList.remove('active');
+    }
+});
+
+document.getElementById('btn-undo').addEventListener('click', undoLastAction);
+
 document.getElementById('key-eraser').addEventListener('click', function() {
     if (gameState.selectedCell && !gameState.isPaused) {
-        var r = gameState.selectedCell.getAttribute('data-row');
-        var c = gameState.selectedCell.getAttribute('data-col');
-        gameData.userMatrix[r][c] = 0;
-        gameState.selectedCell.innerText = '';
-        gameState.selectedCell.classList.remove('error');
+        var r = parseInt(gameState.selectedCell.getAttribute('data-row'), 10);
+        var c = parseInt(gameState.selectedCell.getAttribute('data-col'), 10);
+        if (gameData.maskedMatrix[r][c] === 0) {
+            saveStateToHistory(); // Guardar para poder Deshacer borrado
+            gameData.userMatrix[r][c] = 0;
+            gameData.notesMatrix[r][c] = [];
+            renderBoard();
+            updateDashboard();
+        }
     }
 });
 
@@ -86,11 +102,15 @@ window.addEventListener('keydown', function(e) {
             processNumberInput(parseInt(e.key, 10));
         } else if (e.key === 'Backspace' || e.key === 'Delete') {
             document.getElementById('key-eraser').click();
+        } else if (e.key.toLowerCase() === 'n') { // Atajo rápido Lápiz para notas
+            document.getElementById('btn-notes').click();
+        } else if (e.ctrlKey && e.key.toLowerCase() === 'z') { // Atajo rápido Deshacer
+            document.getElementById('btn-undo').click();
         }
     }
 });
 
-// Eventos del Panel Superior en Juego
+// Botones Superiores (Juego y Pausa)
 document.getElementById('btn-abandon').addEventListener('click', function() {
     stopTimer();
     document.body.className = '';
@@ -125,8 +145,11 @@ document.getElementById('btn-cancel-restart').addEventListener('click', function
 });
 
 document.getElementById('btn-confirm-restart').addEventListener('click', function() {
+    saveStateToHistory();
     gameData.userMatrix = deepCopyMatrix(gameData.maskedMatrix);
+    gameData.notesMatrix = createEmptyNotes();
     renderBoard();
+    updateDashboard();
     gameState.selectedCell = null;
     gameState.isPaused = false; 
     hideModals();

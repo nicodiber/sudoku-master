@@ -12,6 +12,18 @@ function deepCopyMatrix(matrix) {
     return copy;
 }
 
+function deepCopyNotes(matrix) {
+    var copy = [];
+    for (var i = 0; i < matrix.length; i++) {
+        var row = [];
+        for (var j = 0; j < matrix[i].length; j++) {
+            row.push(matrix[i][j].slice());
+        }
+        copy.push(row);
+    }
+    return copy;
+}
+
 function shuffleSudokuMatrix() {
     var matrix = deepCopyMatrix(perfectBase);
     
@@ -24,6 +36,7 @@ function shuffleSudokuMatrix() {
         matrix[r1] = matrix[r2];
         matrix[r2] = tempRow;
     }
+    
     // Intercambio de Columnas dentro de bloques de 3
     for (var j = 0; j < 5; j++) {
         var cBlock = getRandomInt(0, 2) * 3;

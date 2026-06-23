@@ -19,10 +19,8 @@ function saveScore() {
     };
 
     history.push(newRecord);
-    // Menor puntaje es mejor
-    history.sort(function(a, b) {
-        return a.puntos - b.puntos;
-    });
+    // Orden ascendente (menor puntaje = mejor ranking)
+    history.sort(function(a, b) { return a.puntos - b.puntos; });
 
     localStorage.setItem('sudoku_master_ranking', JSON.stringify(history));
 }
@@ -39,8 +37,8 @@ function openRanking() {
         for (var i = 0; i < history.length; i++) {
             var itemDiv = document.createElement('div');
             itemDiv.className = 'ranking-item';
-            itemDiv.innerHTML = "<strong>" + (i + 1) + ". " + history[i].nombre + "</strong> - " + 
-                                history[i].puntos + " pts (" + history[i].dificultad + ")<br><em>" + history[i].fecha + "</em>";
+            itemDiv.innerHTML = "<strong>" + (i + 1) + ". " + history[i].nombre + "</strong>" + 
+                                history[i].puntos + " (" + history[i].dificultad + ")<br><em>" + history[i].fecha + "</em>";
             listContainer.appendChild(itemDiv);
         }
     }
