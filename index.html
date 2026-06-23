@@ -1,27 +1,36 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sudoku Master Web - UAI</title>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
+/* index.html - Estructura principal de la aplicación web Sudoku Master, incluyendo pantallas de inicio, menú, juego y modales. */
 
-    <div id="login-screen" class="screen active">
-        <div class="card login-card">
+<!DOCTYPE html> /* Doctype HTML5 para definir el tipo de documento */
+<html lang="es"> /* Idioma del documento: español */
+
+/* Metadatos y enlaces a recursos externos como hojas de estilo y scripts. */
+<head>
+    <meta charset="UTF-8"> /* Codificación de caracteres UTF-8 para soportar caracteres especiales */
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> /* Configuración de la ventana gráfica para dispositivos móviles */
+    <title>Sudoku Master Web</title> /* Título de la página que aparece en la pestaña del navegador */
+    <link rel="stylesheet" href="css/styles.css"> /* Enlace a la hoja de estilos CSS para el diseño visual de la aplicación */
+</head>
+
+/* Estructura visual y funcional de la aplicación web. */
+<body>
+    /* Pantalla de inicio de sesión donde el jugador ingresa su nombre. */
+    <div id="login-screen" class="screen active"> /* Pantalla de inicio de sesión, inicialmente activa */
+        <div class="card login-card"> /* Contenedor con estilo de tarjeta para el formulario de inicio de sesión */
             <h1>Sudoku Master</h1>
             <p>Ingresa tu nombre de jugador para comenzar</p>
+            /* Campo de entrada para el nombre del jugador con un marcador de posición y desactivación de autocompletado */
             <input type="text" id="login-name" placeholder="Nombre (Mínimo 3 caracteres alfanuméricos)" autocomplete="off">
+            /* Botón para continuar al menú principal, inicialmente deshabilitado hasta que se ingrese un nombre válido */
             <button id="btn-login" disabled>Continuar</button>
         </div>
     </div>
 
-    <div id="main-menu-screen" class="screen hidden">
-        <div class="card menu-card">
+    /* Pantalla principal del menú del juego. */
+    <div id="main-menu-screen" class="screen hidden"> /* Pantalla del menú principal, inicialmente oculta */
+        <div class="card menu-card"> /* Contenedor con estilo de tarjeta para el menú principal */
             <h2 id="menu-greeting">Bienvenido, Jugador</h2>
-            <div class="menu-buttons">
-                <div class="difficulty-section">
+            <div class="menu-buttons"> /* Contenedor para los botones del menú */
+                <div class="difficulty-section"> /* Sección para seleccionar la dificultad del juego */
                     <h3>Jugar</h3>
                     <button id="btn-play-easy" class="btn-easy">Fácil</button>
                     <button id="btn-play-medium" class="btn-medium">Medio</button>
@@ -35,31 +44,39 @@
         </div>
     </div>
 
-    <div id="game-screen" class="screen hidden">
-        <div class="game-container">
-            <div class="top-panel">
-                <div class="left-controls">
+    /* Pantalla del juego donde se muestra el tablero de Sudoku y los controles del jugador. */
+    <div id="game-screen" class="screen hidden"> /* Pantalla del juego, inicialmente oculta */
+        <div class="game-container"> /* Contenedor principal del juego */
+            <div class="top-panel"> /* Panel superior que contiene los controles y métricas del juego */
+                <div class="left-controls"> /* Controles a la izquierda del panel superior */
                     <button id="btn-abandon" class="btn-danger">Abandonar</button>
                     <button id="btn-pause" class="btn-warning">Pausar</button>
                 </div>
+                /* Métricas centrales del panel superior. */
                 <div class="center-metrics">
+                    /* Muestra el nombre del jugador, la dificultad del juego y las vidas actuales. */
                     <div class="metric"><span id="game-player-name"></span> (<span id="game-difficulty-label"></span>)</div>
                     <div class="metric">Tiempo: <span id="timer-display">00:00</span></div>
                     <div class="metric lives-container" id="lives-display"></div>
                 </div>
+                /* Controles a la derecha del panel superior. */
                 <div class="right-controls">
                     <button id="btn-restart" class="btn-danger">Reiniciar</button>
                 </div>
             </div>
 
-            <div class="board-wrapper">
-                <div id="board-overlay" class="hidden">
+            /* Contenedor del tablero de Sudoku y el panel de teclado virtual. */
+            <div class="board-wrapper"> /* Contenedor que envuelve el tablero de Sudoku y el overlay de pausa */
+                <div id="board-overlay" class="hidden"> /* Overlay que se muestra cuando el juego está pausado, inicialmente oculto */
                     <h2 id="overlay-text">Partida Pausada</h2>
                 </div>
+                /* Contenedor del tablero de Sudoku donde se renderizan las celdas del juego. */
                 <div id="sudoku-board"></div>
             </div>
 
+            /* Panel de teclado virtual que permite al jugador interactuar con el tablero. */
             <div id="keyboard-panel">
+                /* Fila de botones numéricos del teclado virtual. */
                 <div class="keyboard-row">
                     <button class="key-num" data-num="1">1</button>
                     <button class="key-num" data-num="2">2</button>
@@ -71,6 +88,7 @@
                     <button class="key-num" data-num="8">8</button>
                     <button class="key-num" data-num="9">9</button>
                 </div>
+                /* Fila de botones de acciones: deshacer, lápiz y goma. */   
                 <div class="keyboard-row actions-row">
                     <button id="btn-undo">Deshacer</button>
                     <button id="btn-notes">Lápiz</button>
@@ -80,20 +98,25 @@
         </div>
     </div>
 
-    <div id="modal-overlay" class="hidden">
-        <div id="modal-rules" class="modal-content hidden">
+    /* Contenedor de modales que se superponen a la pantalla principal para mostrar información adicional o solicitar confirmaciones. */
+    <div id="modal-overlay" class="hidden"> /* Overlay que se muestra cuando un modal está activo, inicialmente oculto */
+        
+        /* Contenido del modal de reglas del juego. */
+        <div id="modal-rules" class="modal-content hidden"> /* Modal que muestra las reglas del juego, inicialmente oculto */
             <h3>Reglas del Juego</h3>
             <p>Completa la grilla de 9x9 para que cada fila, columna y bloque de 3x3 contenga los números del 1 al 9 sin repetirse. Usa el Lápiz para notas.</p>
             <p><strong>Penalizaciones:</strong> Cada error resta 1 vida y suma +300 puntos. (Menor puntaje es mejor).</p>
             <button class="btn-close-modal">Cerrar</button>
         </div>
 
+        /* Contenido del modal de ranking de puntos históricos. */
         <div id="modal-ranking" class="modal-content hidden">
             <h3>Ranking de Puntos Histórico</h3>
             <div id="ranking-list"></div>
             <button class="btn-close-modal">Cerrar</button>
         </div>
 
+        /* Contenido del modal de contacto. */  
         <div id="modal-contact" class="modal-content hidden">
             <h3>Contacto</h3>
             <input type="text" id="contact-name" placeholder="Nombre alfanumérico">
@@ -103,6 +126,7 @@
             <button class="btn-close-modal secondary-btn">Cancelar</button>
         </div>
 
+        /* Contenido del modal de confirmación para reiniciar el tablero. */
         <div id="modal-restart-confirm" class="modal-content hidden">
             <h3>¿Reiniciar tablero?</h3>
             <p>Se borrarán tus jugadas pero conservarás el tiempo, penalizaciones y vidas actuales.</p>
@@ -110,18 +134,21 @@
             <button id="btn-cancel-restart" class="secondary-btn">Cancelar</button>
         </div>
         
+        /* Contenido del modal de confirmación para abandonar la partida. */
         <div id="modal-pause" class="modal-content hidden">
             <h3>Juego Pausado</h3>
             <button id="btn-resume-game">Reanudar</button>
             <button id="btn-abandon-paused" class="secondary-btn">Abandonar Partida</button>
         </div>
 
+        /* Contenido del modal de partida perdida. */
         <div id="modal-game-over" class="modal-content hidden">
             <h3>¡Game Over!</h3>
             <p>Te has quedado sin vidas.</p>
             <button id="btn-game-over-close">Volver al Menú</button>
         </div>
 
+        /* Contenido del modal de victoria de partida. */
         <div id="modal-victory" class="modal-content hidden">
             <h3>¡Victoria!</h3>
             <p>Puntos finales: <span id="victory-score"></span></p>
@@ -129,11 +156,12 @@
         </div>
     </div>
 
-    <script src="js/state.js"></script>
-    <script src="js/generator.js"></script>
-    <script src="js/storage.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/game.js"></script>
-    <script src="js/main.js"></script>
+    /* Enlaces a los scripts JavaScript que contienen la lógica del juego y la interacción con la interfaz de usuario. */
+    <script src="js/state.js"></script> /* Script que maneja el estado del juego y las matrices del Sudoku */
+    <script src="js/generator.js"></script> /* Script que genera y mezcla tableros de Sudoku y enmascara celdas según la dificultad */
+    <script src="js/storage.js"></script> /* Script que guarda y recupera el ranking de puntajes del jugador usando localStorage */
+    <script src="js/ui.js"></script> /* Script que maneja la interfaz de usuario, mostrando/ocultando pantallas y modales, y actualizando el tablero y el panel de control del juego */
+    <script src="js/game.js"></script> /* Script que contiene la lógica principal del juego, incluyendo la inicialización, el manejo de entradas del usuario, la validación de movimientos y la gestión del estado del juego */
+    <script src="js/main.js"></script>  /* Script que inicializa el juego, maneja la interacción del usuario con la interfaz y gestiona los modales */
 </body>
 </html>

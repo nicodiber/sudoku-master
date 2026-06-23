@@ -1,27 +1,32 @@
+// js/state.js - Contiene la estructura de datos que representa el estado del juego y las matrices del Sudoku.
+
 "use strict";
 
+// gameState almacena la información de la partida actual
 var gameState = {
-    playerName: "",
-    difficulty: "",
-    timeElapsed: 0,
-    timerInterval: null,
-    score: 0,
-    lives: 5,
-    selectedCell: null,
-    baseScore: 0,
-    isPaused: false,
-    isNotesMode: false,
+    playerName: "", // Nombre del jugador
+    difficulty: "", // Dificultad del juego
+    timeElapsed: 0, // Tiempo transcurrido, en segundos
+    timerInterval: null, // Guarda la referencia al cronómetro para poder pausarlo/detenerlo
+    score: 0, // Puntuación del jugador
+    lives: 5, // Vidas restantes del jugador
+    selectedCell: null, // Guarda qué celda del DOM está clickeada actualmente
+    baseScore: 0, // Puntuación base según la dificultad
+    isPaused: false, // Bandera para saber si el juego está pausado
+    isNotesMode: false, // Bandera para saber si el usuario está usando el lápiz
     history: [] // Almacena estados pasados para el botón Deshacer
 };
 
+// gameData almacena exclusivamente las matrices (cuadrículas de 9x9) del juego.
 var gameData = {
-    solutionMatrix: [],
-    maskedMatrix: [],
-    userMatrix: [],
+    solutionMatrix: [], // El tablero resuelto y correcto (100% completo)
+    maskedMatrix: [], // El tablero inicial con huecos (0) según la dificultad
+    userMatrix: [], // El tablero dinámico donde el usuario va ingresando números
     notesMatrix: [] // Matriz 9x9 donde cada celda es un array para notas
 };
 
-// Matriz base válida requerida para el algoritmo de mezcla
+// perfectBase es un tablero de Sudoku 100% válido y resuelto
+// Se utiliza como base para "mezclar" y conseguir variaciones de tableros válidos, en lugar de usar librerías externas o algoritmos complejos de generación de Sudoku
 var perfectBase = [
     [5,3,4,6,7,8,9,1,2],
     [6,7,2,1,9,5,3,4,8],
