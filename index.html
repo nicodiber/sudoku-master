@@ -9,7 +9,7 @@
 <body>
 
     <div id="login-screen" class="screen active">
-        <div class="card">
+        <div class="card login-card">
             <h1>Sudoku Master</h1>
             <p>Ingresa tu nombre de jugador para comenzar</p>
             <input type="text" id="login-name" placeholder="Nombre (Mínimo 3 caracteres alfanuméricos)" autocomplete="off">
@@ -18,18 +18,18 @@
     </div>
 
     <div id="main-menu-screen" class="screen hidden">
-        <div class="card">
+        <div class="card menu-card">
             <h2 id="menu-greeting">Bienvenido, Jugador</h2>
             <div class="menu-buttons">
                 <div class="difficulty-section">
                     <h3>Jugar</h3>
-                    <button id="btn-play-easy">Fácil</button>
-                    <button id="btn-play-medium">Medio</button>
-                    <button id="btn-play-hard">Difícil</button>
+                    <button id="btn-play-easy" class="btn-easy">Fácil</button>
+                    <button id="btn-play-medium" class="btn-medium">Medio</button>
+                    <button id="btn-play-hard" class="btn-hard">Difícil</button>
                 </div>
-                <button id="btn-rules">Reglas del Juego</button>
-                <button id="btn-ranking">Historial de Ranking</button>
-                <button id="btn-contact">Contacto</button>
+                <button id="btn-rules" class="btn-action">Reglas del Juego</button>
+                <button id="btn-ranking" class="btn-action">Historial de Ranking</button>
+                <button id="btn-contact" class="btn-action">Contacto</button>
                 <button id="btn-edit-name" class="secondary-btn">Editar Nombre</button>
             </div>
         </div>
@@ -39,36 +39,43 @@
         <div class="game-container">
             <div class="top-panel">
                 <div class="left-controls">
-                    <button id="btn-abandon">Abandonar</button>
-                    <button id="btn-pause">Pausar</button>
+                    <button id="btn-abandon" class="btn-danger">Abandonar</button>
+                    <button id="btn-pause" class="btn-warning">Pausar</button>
                 </div>
                 <div class="center-metrics">
                     <div class="metric"><span id="game-player-name"></span> (<span id="game-difficulty-label"></span>)</div>
                     <div class="metric">Tiempo: <span id="timer-display">00:00</span></div>
-                    <div class="metric">Puntos: <span id="score-display">0</span></div>
                     <div class="metric lives-container" id="lives-display"></div>
                 </div>
                 <div class="right-controls">
-                    <button id="btn-restart">Reiniciar</button>
+                    <button id="btn-restart" class="btn-danger">Reiniciar</button>
                 </div>
             </div>
 
-            <div id="board-overlay" class="hidden">
-                <h2 id="overlay-text">Partida Pausada</h2>
+            <div class="board-wrapper">
+                <div id="board-overlay" class="hidden">
+                    <h2 id="overlay-text">Partida Pausada</h2>
+                </div>
+                <div id="sudoku-board"></div>
             </div>
-            <div id="sudoku-board"></div>
 
             <div id="keyboard-panel">
-                <button class="key-num" data-num="1">1</button>
-                <button class="key-num" data-num="2">2</button>
-                <button class="key-num" data-num="3">3</button>
-                <button class="key-num" data-num="4">4</button>
-                <button class="key-num" data-num="5">5</button>
-                <button class="key-num" data-num="6">6</button>
-                <button class="key-num" data-num="7">7</button>
-                <button class="key-num" data-num="8">8</button>
-                <button class="key-num" data-num="9">9</button>
-                <button id="key-eraser">Goma</button>
+                <div class="keyboard-row">
+                    <button class="key-num" data-num="1">1</button>
+                    <button class="key-num" data-num="2">2</button>
+                    <button class="key-num" data-num="3">3</button>
+                    <button class="key-num" data-num="4">4</button>
+                    <button class="key-num" data-num="5">5</button>
+                    <button class="key-num" data-num="6">6</button>
+                    <button class="key-num" data-num="7">7</button>
+                    <button class="key-num" data-num="8">8</button>
+                    <button class="key-num" data-num="9">9</button>
+                </div>
+                <div class="keyboard-row actions-row">
+                    <button id="btn-undo">Deshacer</button>
+                    <button id="btn-notes">Lápiz</button>
+                    <button id="key-eraser">Goma</button>
+                </div>
             </div>
         </div>
     </div>
@@ -76,13 +83,13 @@
     <div id="modal-overlay" class="hidden">
         <div id="modal-rules" class="modal-content hidden">
             <h3>Reglas del Juego</h3>
-            <p>Completa la grilla de 9x9 para que cada fila, columna y bloque de 3x3 contenga los números del 1 al 9 sin repetirse.</p>
+            <p>Completa la grilla de 9x9 para que cada fila, columna y bloque de 3x3 contenga los números del 1 al 9 sin repetirse. Usa el Lápiz para notas.</p>
             <p><strong>Penalizaciones:</strong> Cada error resta 1 vida y suma +300 puntos. (Menor puntaje es mejor).</p>
             <button class="btn-close-modal">Cerrar</button>
         </div>
 
         <div id="modal-ranking" class="modal-content hidden">
-            <h3>Ranking Histórico</h3>
+            <h3>Ranking de Puntos Histórico</h3>
             <div id="ranking-list"></div>
             <button class="btn-close-modal">Cerrar</button>
         </div>
@@ -92,7 +99,7 @@
             <input type="text" id="contact-name" placeholder="Nombre alfanumérico">
             <input type="email" id="contact-email" placeholder="Correo electrónico válido">
             <textarea id="contact-message" placeholder="Mensaje (mínimo 6 caracteres)"></textarea>
-            <button id="btn-send-contact" disabled>Enviar via Mailto</button>
+            <button id="btn-send-contact" disabled>Enviar</button>
             <button class="btn-close-modal secondary-btn">Cancelar</button>
         </div>
 
@@ -102,7 +109,7 @@
             <button id="btn-confirm-restart">Sí, reiniciar tablero</button>
             <button id="btn-cancel-restart" class="secondary-btn">Cancelar</button>
         </div>
-
+        
         <div id="modal-pause" class="modal-content hidden">
             <h3>Juego Pausado</h3>
             <button id="btn-resume-game">Reanudar</button>

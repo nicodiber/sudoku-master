@@ -9,13 +9,16 @@ var gameState = {
     lives: 5,
     selectedCell: null,
     baseScore: 0,
-    isPaused: false
+    isPaused: false,
+    isNotesMode: false,
+    history: [] // Almacena estados pasados para el botón Deshacer
 };
 
 var gameData = {
     solutionMatrix: [],
     maskedMatrix: [],
-    userMatrix: []
+    userMatrix: [],
+    notesMatrix: [] // Matriz 9x9 donde cada celda es un array para notas
 };
 
 // Matriz base válida requerida para el algoritmo de mezcla
