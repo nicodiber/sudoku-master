@@ -95,7 +95,7 @@ document.getElementById('key-eraser').addEventListener('click', function() {
     }
 });
 
-// Soporte teclado físico del Sistema
+// Soporte teclado físico del Sistema y navegación por flechas
 window.addEventListener('keydown', function(e) {
     if (document.getElementById('game-screen').classList.contains('active') && !gameState.isPaused) {
         if (e.key >= '1' && e.key <= '9') {
@@ -106,6 +106,28 @@ window.addEventListener('keydown', function(e) {
             document.getElementById('btn-notes').click();
         } else if (e.ctrlKey && e.key.toLowerCase() === 'z') { // Atajo rápido Deshacer
             document.getElementById('btn-undo').click();
+        } else if (e.key.indexOf('Arrow') === 0 && gameState.selectedCell) {
+            // Navegación con flechas, evitando que el navegador baje la página
+            e.preventDefault(); 
+            var r = parseInt(gameState.selectedCell.getAttribute('data-row'), 10);
+            var c = parseInt(gameState.selectedCell.getAttribute('data-col'), 10);
+
+            // Cálculos para evitar salir de los límites de la matriz (0 a 8)
+            if (e.key === 'ArrowUp') r = Math.max(0, r - 1);
+            else if (e.key === 'ArrowDown') r = Math.min(8, r + 1);
+            else if (e.key === 'ArrowLeft') c = Math.max(0, c - 1);
+            else if (e.key === 'ArrowRight') c = Math.min(8, c + 1);
+
+            // Búsqueda y actualización de la celda objetivo en el DOM
+            var nextCell = document.querySelector('.sudoku-cell[data-row="' + r + '"][data-col="' + c + '"]');
+            if (nextCell) {
+                var cells = document.querySelectorAll('.sudoku-cell');
+                for (var j = 0; j < cells.length; j++) {
+                    cells[j].classList.remove('selected');
+                }
+                nextCell.classList.add('selected');
+                gameState.selectedCell = nextCell;
+            }
         }
     }
 });

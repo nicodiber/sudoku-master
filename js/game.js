@@ -21,14 +21,17 @@ function saveStateToHistory() {
     });
 }
 
+// Deshacer: Al deshacer no se recupera la vida en caso de error del usuario.
 function undoLastAction() {
     if (gameState.history.length === 0 || gameState.isPaused) return;
     var lastState = gameState.history.pop();
+    
+    // Se restaura el tablero y las notas
     gameData.userMatrix = lastState.userMatrix;
     gameData.notesMatrix = lastState.notesMatrix;
-    gameState.lives = lastState.lives;
-    gameState.score = lastState.score;
     
+    // NOTA: No se restauran lastState.lives ni lastState.score para que las penalizaciones por errores sean irreversibles (El contador no se modifica a favor).
+
     updateDashboard();
     renderBoard();
 }
@@ -45,17 +48,28 @@ function initGame(difficulty) {
     
     var clues = 0;
     document.body.className = ''; 
+    
+    // PUNTOS: Mayor motivación al nivel fácil y medio
     if (difficulty === 'Fácil') {
+        // Cantidad de números prellenados para el nivel fácil
         clues = getRandomInt(45, 50);
-        gameState.baseScore = 2000;
+        // Puntos base para el nivel fácil
+        gameState.baseScore = 5000; 
+        // Cambia el tema visual para el nivel fácil
         document.body.classList.add('theme-easy');
     } else if (difficulty === 'Medio') {
+        // Cantidad de números prellenados para el nivel medio
         clues = getRandomInt(36, 44);
-        gameState.baseScore = 1000;
+        // Puntos base para el nivel medio
+        gameState.baseScore = 2500;
+        // Cambia el tema visual para el nivel medio
         document.body.classList.add('theme-medium');
     } else {
+        // Cantidad de números prellenados para el nivel difícil
         clues = getRandomInt(28, 35);
+        // Puntos base para el nivel difícil
         gameState.baseScore = 0;
+        // Cambia el tema visual para el nivel difícil
         document.body.classList.add('theme-hard');
     }
     
@@ -134,8 +148,8 @@ function renderBoard() {
             }
             
             if (gameState.selectedCell && 
-                parseInt(gameState.selectedCell.getAttribute('data-row')) === r && 
-                parseInt(gameState.selectedCell.getAttribute('data-col')) === c) {
+                parseInt(gameState.selectedCell.getAttribute('data-row'), 10) === r && 
+                parseInt(gameState.selectedCell.getAttribute('data-col'), 10) === c) {
                 cell.classList.add('selected');
                 gameState.selectedCell = cell; 
             }
@@ -211,7 +225,7 @@ function processNumberInput(num) {
             gameState.score += 300;
             if (gameState.lives <= 0) { handleGameOver(); }
         } else {
-            // El número es correcto: Limpiar las notas cruzadas en otras celdas
+            // Si el número colocado es correcto, limpiar las notas cruzadas en otras celdas
             clearAdjacentNotes(r, c, num);
             checkVictory();
         }

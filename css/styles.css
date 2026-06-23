@@ -1,5 +1,5 @@
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #e4e9f2; transition: background 0.5s; }
+body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #85a6e2; transition: background 0.5s; }
 
 /* Temas dinámicos */
 body.theme-easy { background-color: #d1e7dd; }
@@ -44,7 +44,24 @@ button:disabled { background-color: #a0a0a0; cursor: not-allowed; transform: non
 .center-metrics { display: flex; flex-direction: column; align-items: center; gap: 5px; font-weight: bold; font-size: 18px;}
 .lives-container { display: flex; gap: 5px; color: #e74c3c; font-size: 22px; }
 
-/* Wrapper para controlar el Overlay de Pausa */
+/* Visual de mobile: Se apilan los paneles si la pantalla es menor a 600px */
+@media (max-width: 600px) {
+    .top-panel {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    .left-controls, .right-controls {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+    }
+    .left-controls button, .right-controls button {
+        flex: 1; /* Los botones toman el mismo ancho */
+        margin: 0 5px;
+    }
+}
+
 .board-wrapper { position: relative; width: 100%; max-width: 65vh; margin: 0 auto; aspect-ratio: 1 / 1; }
 #board-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); color: white; display: flex; justify-content: center; align-items: center; z-index: 20; font-size: 28px; border-radius: 4px; flex-direction: column; }
 
@@ -76,7 +93,17 @@ button:disabled { background-color: #a0a0a0; cursor: not-allowed; transform: non
 .actions-row button { flex: 1 1 30%; height: 50px; font-size: 16px; padding: 5px; }
 
 #btn-notes { background-color: #17a2b8; }
-#btn-notes.active { background-color: #117a8b; border: 3px solid #000; }
+
+/* Lapiz: Mayor contraste y efecto visual para fácil identificación cuando está activo */
+#btn-notes.active { 
+    background-color: #ffeb3b !important;
+    color: #000 !important;
+    border: 3px dashed #e65100;
+    box-shadow: inset 0px 0px 15px rgba(230, 81, 0, 0.4), 0px 0px 10px rgba(255, 235, 59, 0.8);
+    transform: scale(0.95);
+    font-weight: 900;
+}
+
 #key-eraser { background-color: #dc3545; }
 #btn-undo { background-color: #6c757d; }
 
