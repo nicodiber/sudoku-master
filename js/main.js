@@ -26,6 +26,14 @@ btnLogin.addEventListener('click', function() {
     showScreen('main-menu-screen'); // Mostramos la pantalla del menú principal
 });
 
+// Soporte para presionar "Enter" en la pantalla de inicio
+inputLogin.addEventListener('keydown', function(e) {
+    // Verifica si la tecla presionada es "Enter" y si el botón "Continuar" NO está deshabilitado
+    if (e.key === 'Enter' && !btnLogin.disabled) {
+        btnLogin.click(); // Simula un click en el botón "Continuar"
+    }
+});
+
 // Botón para editar el nombre de usuario desde el menú principal
 document.getElementById('btn-edit-name').addEventListener('click', function() {
     inputLogin.value = ""; // Limpiamos el input para que el usuario pueda escribir un nuevo nombre
