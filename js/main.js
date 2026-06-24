@@ -152,11 +152,41 @@ window.addEventListener('keydown', function(e) {
     }
 });
 
-// Botón abandono del juego
-document.getElementById('btn-abandon').addEventListener('click', function() { // Evento al hacer click en el botón de abandonar el juego
+// Función auxiliar para salir al menú principal (la usaremos al confirmar y al terminar el juego)
+function executeExitToMenu() {
     stopTimer(); // Detiene el cronómetro del juego
     document.body.className = ''; // Resetea cualquier clase de dificultad aplicada al body
     showScreen('main-menu-screen'); // Muestra la pantalla del menú principal
+}
+
+// Botón abandono del juego
+document.getElementById('btn-abandon').addEventListener('click', function() { // Evento al hacer click en el botón de abandonar el juego
+    gameState.isPaused = true;
+    showModal('modal-abandon-confirm');
+});
+
+// Botón cancelar abandono
+document.getElementById('btn-cancel-abandon').addEventListener('click', function() {
+    gameState.isPaused = false;
+    hideModals();
+});
+
+// Botón confirmar abandono
+document.getElementById('btn-confirm-abandon').addEventListener('click', function() {
+    hideModals();
+    executeExitToMenu();
+});
+
+// Botón reiniciar partida
+document.getElementById('btn-restart').addEventListener('click', function() { // Evento al hacer click en el botón de reiniciar la partida
+    gameState.isPaused = true; // Pausa el juego antes de mostrar el modal de confirmación
+    showModal('modal-restart-confirm'); // Muestra el modal de confirmación para reiniciar la partida
+});
+
+// Botones del modal de reinicio de partida
+document.getElementById('btn-cancel-restart').addEventListener('click', function() { // Evento al hacer click en el botón cancelar reinicio de partida desde el modal confirmación
+    gameState.isPaused = false; // Reanuda el juego si el usuario decide no reiniciar
+    hideModals(); // Cierra el modal de confirmación de reinicio de partida
 });
 
 // Botón pausa
@@ -179,18 +209,6 @@ document.getElementById('btn-abandon-paused').addEventListener('click', function
     document.getElementById('btn-abandon').click(); // Simula un click en el botón de abandonar el juego para ejecutar la lógica de abandono
 });
 
-// Botón reiniciar partida
-document.getElementById('btn-restart').addEventListener('click', function() { // Evento al hacer click en el botón de reiniciar la partida
-    gameState.isPaused = true; // Pausa el juego antes de mostrar el modal de confirmación
-    showModal('modal-restart-confirm'); // Muestra el modal de confirmación para reiniciar la partida
-});
-
-// Botones del modal de reinicio de partida
-document.getElementById('btn-cancel-restart').addEventListener('click', function() { // Evento al hacer click en el botón cancelar reinicio de partida desde el modal confirmación
-    gameState.isPaused = false; // Reanuda el juego si el usuario decide no reiniciar
-    hideModals(); // Cierra el modal de confirmación de reinicio de partida
-});
-
 // Confirmación de reinicio de partida
 document.getElementById('btn-confirm-restart').addEventListener('click', function() { // Evento al hacer click en el botón confirmar reinicio de partida desde el modal confirmación
     saveStateToHistory(); // Guarda el estado actual antes de reiniciar para permitir deshacer
@@ -208,11 +226,11 @@ document.getElementById('btn-confirm-restart').addEventListener('click', functio
 // Botón de victoria
 document.getElementById('btn-game-over-close').addEventListener('click', function() { // Evento al hacer click en el botón de cerrar el modal de victoria
     hideModals(); // Cierra el modal de victoria
-    document.getElementById('btn-abandon').click(); // Simula un click en el botón de abandonar el juego para ejecutar la lógica de abandono y volver al menú principal
+    executeExitToMenu(); // <-- Salida directa sin disparar el modal de confirmación
 });
 
 // Botón de derrota
 document.getElementById('btn-victory-close').addEventListener('click', function() { // Evento al hacer click en el botón de cerrar el modal de derrota
     hideModals(); // Cierra el modal de derrota
-    document.getElementById('btn-abandon').click(); // Simula un click en el botón de abandonar el juego para ejecutar la lógica de abandono y volver al menú principal
+    executeExitToMenu(); // <-- Salida directa sin disparar el modal de confirmación
 });
