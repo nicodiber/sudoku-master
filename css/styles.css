@@ -32,7 +32,8 @@ button:disabled { background-color: #a0a0a0; cursor: not-allowed; transform: non
 .btn-action:hover { background-color: rgba(255,255,255,0.4); }
 .secondary-btn { background-color: #6c757d; }
 .btn-danger { background-color: #dc3545; }
-.btn-warning { background-color: #ffc107; color: #333; }
+.btn-warning { background-color: #b907ff; }
+.btn-reset { background-color: #ffc107;}
 
 .menu-buttons { display: flex; flex-direction: column; gap: 15px; }
 .difficulty-section { display: flex; flex-direction: column; gap: 10px; background: rgba(0,0,0,0.15); padding: 15px; border-radius: 8px; }
