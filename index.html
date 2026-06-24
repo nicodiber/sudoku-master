@@ -36,7 +36,7 @@
                     <button id="btn-play-medium" class="btn-medium">Medio</button>
                     <button id="btn-play-hard" class="btn-hard">Difícil</button>
                 </div>
-                <button id="btn-rules" class="btn-action">Reglas del Juego</button>
+                <button id="btn-rules" class="btn-action">Cómo Jugar</button>
                 <button id="btn-ranking" class="btn-action">Ranking</button>
                 <button id="btn-contact" class="btn-action">Contacto</button>
                 <button id="btn-edit-name" class="secondary-btn">Editar Nombre</button>
@@ -101,11 +101,21 @@
     <!-- Contenedor de modales que se superponen a la pantalla principal para mostrar información adicional o solicitar confirmaciones. -->
     <div id="modal-overlay" class="hidden"> <!-- Overlay que se muestra cuando un modal está activo, inicialmente oculto -->
         
-        <!-- Contenido del modal de reglas del juego. -->
-        <div id="modal-rules" class="modal-content hidden"> <!-- Modal que muestra las reglas del juego, inicialmente oculto -->
-            <h3>Reglas del Juego</h3>
-            <p>Completa la grilla de 9x9 para que cada fila, columna y bloque de 3x3 contenga los números del 1 al 9 sin repetirse. Usa el Lápiz para notas.</p>
-            <p><strong>Penalizaciones:</strong> Cada error resta 1 vida y suma +300 puntos. (Menor puntaje es mejor).</p>
+        <!-- Contenido del modal de Cómo Jugar. -->
+        <div id="modal-rules" class="modal-content hidden"> <!-- Modal que muestra Cómo Jugar, inicialmente oculto -->
+            <h3>OBJETIVO</h3>
+            <p>Completa el tablero de 9x9.</p>
+            <h3>REGLAS</h3>
+            <p>Cada dígito del 1 al 9 debe aparecer solo una vez en cada fila, columna y bloque de 3x3.</p> 
+            <h3>TIP</h3>
+            <p>Usa el botón "Lápiz" para realizar tus anotaciones.</p>
+            <h3>SISTEMA DE PUNTOS</h3>
+            <p>El objetivo es conseguir la menor cantidad de puntos posibles.</p>
+            <ul> 
+                <li> Cada segundo transcurrido equivale a 1 punto.</li>
+                <li> El nivel Fácil inicia con 5000 puntos, el Medio con 2500 y el Difícil con 0.</li>
+                <li> Cada error resta 1 vida y suma 300 puntos.</li>
+            </ul>
             <button class="btn-close-modal">Cerrar</button>
         </div>
 
@@ -119,9 +129,9 @@
         <!-- Contenido del modal de contacto. -->  
         <div id="modal-contact" class="modal-content hidden">
             <h3>Contacto</h3>
-            <input type="text" id="contact-name" placeholder="Nombre alfanumérico">
-            <input type="email" id="contact-email" placeholder="Correo electrónico válido">
-            <textarea id="contact-message" placeholder="Mensaje (mínimo 6 caracteres)"></textarea>
+            <input type="text" id="contact-name" placeholder="Tu nombre completo">
+            <input type="email" id="contact-email" value="ndibernardo+sudokumaster@gmail.com" readonly>
+            <textarea id="contact-message" placeholder="Mensaje"></textarea>
             <button id="btn-send-contact" disabled>Enviar</button>
             <button class="btn-close-modal secondary-btn">Cancelar</button>
         </div>
