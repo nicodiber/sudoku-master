@@ -57,16 +57,17 @@ function initGame(difficulty) {
     // Definición de parámetros por nivel: numeros prellenados y puntos base
     if (difficulty === 'Fácil') {
         clues = getRandomInt(45, 50);
-        gameState.baseScore = 5000; 
+        gameState.baseScore = 5000; // 5000 / 60 = 83,3. Equivale a 83 minutos.
         document.body.classList.add('theme-easy'); // Cambia el tema visual para el nivel fácil
     } else if (difficulty === 'Medio') {
         clues = getRandomInt(36, 44);
-        gameState.baseScore = 2500;
+        gameState.baseScore = 2500; // 2500 / 60 = 41,6. Equivale a 42 minutos.
         document.body.classList.add('theme-medium'); // Cambia el tema visual para el nivel medio
-    } else 
+    } else {
         clues = getRandomInt(28, 35);
         gameState.baseScore = 0;
         document.body.classList.add('theme-hard'); // Cambia el tema visual para el nivel difícil
+    }
     
     gameState.score = gameState.baseScore; // Inicializa la puntuación
 
