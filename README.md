@@ -2,7 +2,7 @@
 
 Un juego de Sudoku interactivo y dinámico desarrollado íntegramente con **HTML5, CSS3 y JavaScript Vanilla**. Este proyecto fue creado como trabajo académico demostrando la aplicación de patrones de diseño, manipulación del DOM, algoritmos de matrices y almacenamiento local en el navegador.
 
-🌐 [INICIAR EL PROYECTO](https://nicodiber.github.io/sudoku-master/)
+🌐 🌐 <a href="https://nicodiber.github.io/sudoku-master/" target="_blank">INICIAR EL PROYECTO</a>
 
 ---
 
